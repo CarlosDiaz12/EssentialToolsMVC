@@ -5,7 +5,8 @@ namespace EssentialToolsMVC.App_Start
 {
     using System;
     using System.Web;
-
+    using System.Web.Mvc;
+    using EssentialToolsMVC.Infrastructure;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
@@ -53,6 +54,8 @@ namespace EssentialToolsMVC.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            // register the dependency resolver
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }        
     }
 }
