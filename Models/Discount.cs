@@ -11,9 +11,15 @@ namespace EssentialToolsMVC.Models
     }
     public class DefaultDiscountHelper : IDiscountHelper
     {
+        public decimal discountSize { get; set; }
+        // example of passing parameters from DI resolver
+        public DefaultDiscountHelper(decimal discountParam)
+        {
+            discountSize = discountParam;
+        }
         public decimal ApplyDiscount(decimal totalParam)
         {
-            return (totalParam - (10m / 100m * totalParam));
+            return (totalParam - (discountSize / 100m * totalParam));
         }
     }
 }
