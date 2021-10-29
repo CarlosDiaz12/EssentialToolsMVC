@@ -1,5 +1,6 @@
 ﻿using EssentialToolsMVC.Models;
 using Ninject;
+using Ninject.Web.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +27,27 @@ namespace EssentialToolsMVC.Infrastructure
         }
         private void AddBindings()
         {
-            kernel.Bind<IValueCalculator>().To<LinqValueCalculator>();
+            kernel.Bind<IValueCalculator>().To<LinqValueCalculator>().InRequestScope();
             kernel.Bind<IDiscountHelper>().To<DefaultDiscountHelper>()
                 // example .WithPropertyValue("DiscountSize", 50m);
                 .WithConstructorArgument("discountParam", 50m); //example of passing constructor params from DI resolver
+
+            // conditional binding
+            kernel.Bind<IDiscountHelper>().To<FlexibleDiscountHelper>().WhenInjectedInto<LinqValueCalculator>();
         }
     }
 }
+
+// object scopes
+/*
+ InTransientScope() T his is the same as not specifying a scope and creates a new object for each dependency that is resolved.
+
+InSingletonScope() Creates a single instance which is shared throughout the application. Ninject will create the instance if you use
+ToConstant(object) InSingletonScope or you can provide it with the ToConstant method.
+
+
+InThreadScope() Creates a single instance which is used to resolve dependencies for objects requested by a single thread.
+InRequestScope() Creates a single instance which is used to resolve dependencies for objects requested by a single HT T P request.
+ 
+ 
+ */
